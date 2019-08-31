@@ -14,15 +14,17 @@ token = '23a150693c6c35da43b24376f1590f76ccebb1e5a1f3ff94c4275b39630555ee'
 
 name = 'eliot'
 username = 'root'
+hostname = name  # is the same as the droplet name , keep it simple
 
 rsa_pub = 'rsa.pub'
 rsa = 'rsa'
 
 cmds = [
     'uname -a',
-    # 'apt-get update -y',
-    # 'apt-get install postfix -y',
-    # 'apt-get install screen -y',
+    'apt-get -y update ',
+    'debconf-set-selections <<< "postfix postfix/mailname string ' + hostname,
+    'debconf-set-selections <<< "postfix postfix/main_mailer_type string \'Internet Site\'"',
+    'apt-get install -y postfix'
 ]
 
 CONNECTION_TRIES = 3
@@ -66,7 +68,7 @@ def create_droplet():
 
 
 def connect_to_droplet(server, again=""):
-    print("[+] Connecting {} to {}@{} on 22 ...".format(username, again, server), end=" ")
+    print("[+] Connecting {} to {}@{} on 22 ...".format(again, username, server), end=" ")
     ssh_session = paramiko.SSHClient()
     ssh_session.set_missing_host_key_policy(paramiko.AutoAddPolicy())
     try:
@@ -104,3 +106,4 @@ if __name__ == '__main__':
     ssh_session = connect_to_droplet(droplet.ip_address)
     run_cmd(ssh_session)
     create_snapshot(droplet)
+    # TODO add regions to snap
