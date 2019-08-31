@@ -13,6 +13,6 @@ for token in tokens:
         continue
     print("               - Number of Droplets : ", len(Manager.get_all_droplets()))
     for i, ssh in enumerate(Manager.get_all_sshkeys()):
-        print("                  - SSH {} : {}".format(i + 1, ssh.name))
+        print("               - SSH {} : {}".format(i + 1, ssh.name))
     for i, snap in enumerate(Manager.get_all_snapshots()):
-        print("                  - Snapshot {} : {}".format(i + 1, snap.name))
+        print("               - Snapshot {} : {}".format(i + 1, snap.name))

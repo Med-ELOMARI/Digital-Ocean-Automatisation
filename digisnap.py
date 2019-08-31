@@ -11,9 +11,13 @@ from digitalocean import SSHKey
 from paramiko.ssh_exception import NoValidConnectionsError
 
 token = '23a150693c6c35da43b24376f1590f76ccebb1e5a1f3ff94c4275b39630555ee'
+
 name = 'eliot'
-rsa_pub = 'Digisnap/rsa.pub'
-rsa = 'Digisnap/rsa'
+username = 'root'
+
+rsa_pub = 'rsa.pub'
+rsa = 'rsa'
+
 cmds = [
     'uname -a',
     # 'apt-get update -y',
@@ -21,7 +25,6 @@ cmds = [
     # 'apt-get install screen -y',
 ]
 
-username = 'root'
 CONNECTION_TRIES = 3
 
 
@@ -45,6 +48,7 @@ def create_droplet():
                                    size='s-6vcpu-16gb')
     Created = False
     droplet.create()
+
     print("[+] Waiting ... ")
     while not Created:
         actions = droplet.get_actions()
@@ -58,7 +62,7 @@ def create_droplet():
     manager = digitalocean.Manager(token=token)
     droplet = manager.get_all_droplets()[0]
     print("[+] {} with ip {}".format(name, droplet.ip_address))
-    return droplet.ip_address
+    return droplet
 
 
 def connect_to_droplet(server, again=""):
@@ -85,9 +89,18 @@ def run_cmd(ssh):
         print("cmd {} -> : {}".format(cmd, stdout.readlines()))
 
 
-if __name__ == '__main__':
-    droplet_ip = create_droplet()
-    sleep(5)  # to make sure it's up
-    ssh = connect_to_droplet(droplet_ip)
-    run_cmd(ssh)
+def create_snapshot(droplet):
+    snap_name = name + "-snap"
+    print("[+] Creating Snapshot created")
+    snap_actions = droplet.take_snapshot(snap_name, return_dict=False, power_off=True)
+    print("[+] Waiting for Snapshot ... ")
+    snap_actions.wait()
+    print("[+] Snapshot created")
 
+
+if __name__ == '__main__':
+    droplet = create_droplet()
+    sleep(5)  # to make sure it's up
+    ssh_session = connect_to_droplet(droplet.ip_address)
+    run_cmd(ssh_session)
+    create_snapshot(droplet)

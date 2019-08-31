@@ -32,13 +32,14 @@ class DigitalDroplets:
         ssh_keys = m.get_all_sshkeys()
         for ssh in ssh_keys:
             print("deleting SSH :", ssh.name)
-            print(ssh.destroy())
+            ssh.destroy()
 
     def delete_snaps(self):
         m = digitalocean.Manager(token=self.api_token)
         snaps = m.get_all_snapshots()
         for snap in snaps:
             print("deleting snap :", snap.name)
+            snap.destroy()
 
 
 if __name__ == "__main__":
