@@ -104,7 +104,7 @@ def run_cmd(ssh):
 def create_snapshot(droplet):
     start = timer()
     snap_name = name + "-snap"
-    print("[+] Creating Snapshot ( ila fik matsena ... )")
+    print("[+] Creating Snapshot ( ila fik matsena ... if not , close and run the last part of the code )")
     snap_actions = droplet.take_snapshot(snap_name, return_dict=False, power_off=True)
     print("[+] Waiting for Snapshot ... ", end="")
     snap_actions.wait()
@@ -145,7 +145,7 @@ def add_regions(snap):
             print("This image has already been transfered to this region")
             continue
     print("[!] wait for region transfer not implemented yet")
-    print("[!] you should wait for transfer ")
+    print("[!] you should wait for transfer to finish ")
 
 
 if __name__ == '__main__':
