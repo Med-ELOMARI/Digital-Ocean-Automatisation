@@ -1,6 +1,6 @@
 from digitalocean import Manager
 
-tokens = ["23a150693c6c35da43b24376f1590f76ccebb1e5a1f3ff94c4275b39630555ee"]
+tokens = ["xxx"]
 
 for token in tokens:
     print("*" * 80)
